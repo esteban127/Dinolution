@@ -7,20 +7,9 @@ public class PoolManager : MonoBehaviour {
 
 
     [SerializeField] List<pool> poolArray;      
-
-    static private PoolManager instance = null;
-    static public PoolManager Instance { get { return instance; } }
-
+    
     private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else if (instance != this)
-            Destroy(gameObject);
-        
+    {        
         for (int i = 0; i < poolArray.Count; i++)
         {
             poolArray[i].InitializePool(gameObject);

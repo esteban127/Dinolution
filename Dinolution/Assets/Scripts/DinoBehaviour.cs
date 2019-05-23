@@ -7,24 +7,46 @@ public class DinoBehaviour : MonoBehaviour
 {
     [SerializeField] float jumpDuration = 2;
     [SerializeField] float jumpHeight = 1;
+    [SerializeField] float obstacleJumpHeight = 0.2f;
+    [SerializeField] float obstacleWidth = 0.2f;
     float currentJumpTime = 0;
+    bool alive = true;
     Vector3 pos = new Vector3 (0,0,0);
     NeuronalNetwork myNeuronalNetwork;
-    public float fitnes;
+    float fitness = 0;
     delegate void ActionDelegate();
-    ActionDelegate action;
-    // Update is called once per frame
+    ActionDelegate act;
+    float[] information;
+    float[] actions;
 
     private void Start()
     {
-        action += Think;
+        act += Think;
+        information = new float[1];
+        actions = new float[2];
     }    
 
     void Update()
     {
-        action();   
-        if(Input.GetKeyDown(KeyCode.Space))
-            action += Jump;
+        information[0] = InfoDirector.Instance.NextObstacleDistance;
+        if (information[0] <= obstacleWidth)
+        {
+            switch (InfoDirector.Instance.NextObstacleType)
+            {
+                case 0:
+                    if (transform.position.y < obstacleJumpHeight)                    
+                        Die();
+                    else
+                        fitness += 25;                    
+                    break;
+            }
+        }
+        if (alive)
+        {
+            act();
+        }
+             
+       
     }
 
     void Jump()
@@ -36,32 +58,38 @@ public class DinoBehaviour : MonoBehaviour
         {
             currentJumpTime = 0;
             pos.y = 0;
-            action -= Jump;
-            action += Think;
-        }  
+            act -= Jump;
+            act += Think;
+        }
+        fitness--;
         transform.position = pos;
     }
 
     private void Think()
     {
-        if(InfoDirector.Instance.NextObstacleDistance<=0.5)
+        actions = myNeuronalNetwork.FitFoward(information);
+        if (actions[0] < actions[1])
         {
-            action += Jump;
-            action -= Think;
-        }
-
-            
+            act += Jump;
+            act -= Think;
+        }        
     }
 
     public void ReciveNeuronalNetwork(NeuronalNetwork neuNet)
     {
         myNeuronalNetwork = neuNet;
+        alive = true;
+        gameObject.SetActive(true);
     }
     
-    public void Die(float deathTime)
+    void Die()
     {
-        fitnes = deathTime;
+        alive = false;
+        gameObject.SetActive(false);
     }
-
+    public void CalculateFitness()
+    {
+        myNeuronalNetwork.SetFitness(fitness);
+    }
 
 }

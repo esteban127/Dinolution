@@ -43,7 +43,7 @@ public class NeuronalNetwork : IComparable<NeuronalNetwork> {
         bias = new float[layers.Length - 2];
         for (int i = 0; i < bias.Length; i++)
         {
-            bias[i] = UnityEngine.Random.Range(-50.0f, 50.0f);
+            bias[i] = UnityEngine.Random.Range(-3.0f, 3.0f);
         }
     }
 
@@ -142,31 +142,32 @@ public class NeuronalNetwork : IComparable<NeuronalNetwork> {
                     random = (int)UnityEngine.Random.Range(0, 100);
 
                     switch (random)
-                        {
-
-                        case 20:
-                        case 21:
-                        case 22:
+                        {                       
+                       
                         case 23:
                         case 24:
                             value *= -1;
                             break;
-
+                        case 25:
+                        case 26:
                         case 27:
                         case 28:
-                            value -= 0.1f;
-                            break;
                         case 29:
-                        case 30:
-                            value *= 2;
+                            value -= 0.01f;
                             break;
-
+                        case 50:
+                        case 51:
+                            value *= 2f;
+                            break;
+                        case 70:
+                        case 71:
                         case 72:
                         case 73:
-                            value += 0.1f;
-                            break;
                         case 74:
+                            value += 0.01f;
+                            break;
                         case 75:
+                        case 76:
                             value *= 0.5f;
                             break;
                         }
@@ -223,7 +224,7 @@ public class NeuronalNetwork : IComparable<NeuronalNetwork> {
                 provitionalList = new List<float>();
                 for (int k = 0; k < neuronalLayer[i]; k++)
                 {
-                    value = UnityEngine.Random.Range(-0.5f, 0.5f);
+                    value = UnityEngine.Random.Range(-0.2f, 0.2f);
                     provitionalList.Add(value);
                 }
                 provitionalArrayList.Add(provitionalList.ToArray());

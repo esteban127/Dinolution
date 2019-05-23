@@ -13,6 +13,20 @@ public class ObstaclesGenerator : MonoBehaviour
     int obstacleVariety = 1;
     List<GameObject> incomingObstacles;
 
+    static private ObstaclesGenerator instance = null;
+    static public ObstaclesGenerator Instance { get { return instance; } }
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (instance != this)
+            Destroy(gameObject);        
+    }
+
     private void Start()
     {
         incomingObstacles = new List<GameObject>();
@@ -47,6 +61,13 @@ public class ObstaclesGenerator : MonoBehaviour
             InfoDirector.Instance.NextObstacleDistance = 2;
         }
             
+    }
+
+    public void Reset()
+    {
+        incomingObstacles.Clear();
+        spawnCooldown = 0;
+        GetComponent<PoolManager>().DeleteAll();
     }
     
     void Spawn()
