@@ -25,12 +25,13 @@ public class DinoGenerator : MonoBehaviour
             GameObject myDino = Instantiate(dinoPrefab);
             NeuronalNetwork myIA = new NeuronalNetwork(neuronalNetworkSize);
             NeuronalList.Add(myIA);
-            myDino.GetComponent<DinoBehaviour>().ReciveNeuronalNetwork(myIA);
+            myDino.GetComponent<DinoBehaviour>().Reset(myIA, neuronalNetworkSize);
             myDino.transform.position = transform.position;
             poblation[i] = myDino;
             myDino.transform.SetParent(transform);
         }
         poblation[0].name = "Pro";
+        poblation[0].GetComponent<DinoBehaviour>().AlphaBoy = true;
         GameObject style = Instantiate(dinoStyle);
         style.transform.SetParent(poblation[0].transform);
 
@@ -38,7 +39,7 @@ public class DinoGenerator : MonoBehaviour
 
     private void Update()
     {
-        if (counter > generationLifeSpan || checkExtinction())
+        if (counter > generationLifeSpan || CheckExtinction())
         {
             NewGeneration();
             counter = 0;
@@ -47,7 +48,7 @@ public class DinoGenerator : MonoBehaviour
         counter += Time.deltaTime;
     }
 
-    private bool checkExtinction()
+    private bool CheckExtinction()
     {
         for (int i = 0; i < poblation.Length; i++)
         {
@@ -71,11 +72,10 @@ public class DinoGenerator : MonoBehaviour
             NeuronalList[poblationNum - 1 - i] = new NeuronalNetwork(NeuronalList[i]);
             NeuronalList[i] = new NeuronalNetwork(NeuronalList[i]);
             NeuronalList[poblationNum - 1 - i].Mutar();
-
         }
         for (int i = 0; i < poblationNum; i++)
         {
-            poblation[i].GetComponent<DinoBehaviour>().ReciveNeuronalNetwork(NeuronalList[i]);            
+            poblation[i].GetComponent<DinoBehaviour>().Reset(NeuronalList[i], neuronalNetworkSize);            
         }
     }
 }

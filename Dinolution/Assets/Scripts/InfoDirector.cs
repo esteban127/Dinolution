@@ -20,7 +20,6 @@ public class InfoDirector
             {
                 instance = new InfoDirector();
             }
-
             return instance;
         }
     }

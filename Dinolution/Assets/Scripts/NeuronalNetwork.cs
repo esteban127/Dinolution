@@ -43,7 +43,7 @@ public class NeuronalNetwork : IComparable<NeuronalNetwork> {
         bias = new float[layers.Length - 2];
         for (int i = 0; i < bias.Length; i++)
         {
-            bias[i] = UnityEngine.Random.Range(-3.0f, 3.0f);
+            bias[i] = UnityEngine.Random.Range(-1.0f, 1.0f);
         }
     }
 

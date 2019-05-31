@@ -10,7 +10,7 @@ public class ObstaclesGenerator : MonoBehaviour
     [SerializeField] float spawnRandomDelayMax = 2.0f;
     [SerializeField] float endOfMap = -2.0f;
     float spawnCooldown = 0;
-    int obstacleVariety = 1;
+    [SerializeField] int obstacleVariety;
     List<GameObject> incomingObstacles;
 
     static private ObstaclesGenerator instance = null;
@@ -53,6 +53,7 @@ public class ObstaclesGenerator : MonoBehaviour
                 {
                     InfoDirector.Instance.NextObstacleType = incomingObstacles[1].GetComponent<ObstacleBehaviour>().Type;
                 }
+                InfoDirector.Instance.NextObstacleDistance = 2;                
                 incomingObstacles.RemoveAt(0);
             }
         }
@@ -72,15 +73,19 @@ public class ObstaclesGenerator : MonoBehaviour
     
     void Spawn()
     {
-        int typeToSpawn = Random.Range(0, obstacleVariety - 1);
+        int typeToSpawn = Random.Range(0, obstacleVariety);
         GameObject newObstacle = GetComponent<PoolManager>().RequestToPool(typeToSpawn , transform.position, transform.rotation);
         newObstacle.GetComponent<ObstacleBehaviour>().Speed = obstacleSpeed;
         newObstacle.GetComponent<ObstacleBehaviour>().EndOfMap = endOfMap;
         newObstacle.GetComponent<ObstacleBehaviour>().Pos = transform.position;
-        newObstacle.GetComponent<ObstacleBehaviour>().Type = typeToSpawn;
-        incomingObstacles.Add(newObstacle);
+        newObstacle.GetComponent<ObstacleBehaviour>().Type = typeToSpawn; 
         if (incomingObstacles.Count == 0)
+        {
+            InfoDirector.Instance.NextObstacleDistance = transform.position.x;
             InfoDirector.Instance.NextObstacleType = typeToSpawn;
+        }
+        incomingObstacles.Add(newObstacle);
+
     }
    
 }

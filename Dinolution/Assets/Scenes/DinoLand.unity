@@ -245,6 +245,12 @@ MonoBehaviour:
       type: 3}
     deletedPos: {x: 0, y: -6.42, z: 0}
     forceExpand: 0
+  - poolName: Crouch
+    poolSize: 5
+    objectToPool: {fileID: 2476210902901224527, guid: bce45063f56ebab429ae3b05bb5e0eba,
+      type: 3}
+    deletedPos: {x: 0, y: -6.42, z: 0}
+    forceExpand: 0
 --- !u!114 &944891019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -261,6 +267,7 @@ MonoBehaviour:
   obstacleSpeed: 1
   spawnRandomDelayMax: 2
   endOfMap: -2
+  obstacleVariety: 2
 --- !u!1 &1076456525
 GameObject:
   m_ObjectHideFlags: 0
@@ -290,10 +297,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b32e404207c8bb742abcbe39ef70ac0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poblationNum: 20
+  poblationNum: 1500
   generation: 0
-  neuronalNetworkSize: 0100000004000000040000000400000002000000
-  generationLifeSpan: 20
+  neuronalNetworkSize: 0200000004000000040000000400000003000000
+  generationLifeSpan: 20000
   dinoPrefab: {fileID: 1320038181922945304, guid: eaebf277220a5024bb130a6f585cae41,
     type: 3}
   dinoStyle: {fileID: 8770416367071811595, guid: 16b7300572f217b4eb6253b8e92b3d9a,

@@ -47,3 +47,5 @@ MonoBehaviour:
   jumpHeight: 1.5
   obstacleJumpHeight: 0.2
   obstacleWidth: 0.2
+  crouchDuration: 1
+  bestActionDistance: 0.7
