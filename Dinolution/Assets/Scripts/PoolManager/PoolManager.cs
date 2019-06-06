@@ -6,7 +6,7 @@ using UnityEngine;
 public class PoolManager : MonoBehaviour {
 
 
-    [SerializeField] List<pool> poolArray;      
+    [SerializeField] List<pool> poolArray = null;      
     
     private void Awake()
     {        

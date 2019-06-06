@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AnimationBehaviour : MonoBehaviour
 {
-    [SerializeField] Sprite[] spriteStatesTest;
+    [SerializeField] Sprite[] spriteStatesTest = null;
     SpriteRenderer render;
 
     private void Start()

@@ -5,14 +5,15 @@ using UnityEngine;
 
 public class DinoBehaviour : MonoBehaviour
 {
-    [SerializeField] float jumpDuration = 2;
+    [SerializeField] float baseActionDuration = 1;    
     [SerializeField] float jumpHeight = 1;
     [SerializeField] float obstacleJumpHeight = 0.2f;
     [SerializeField] float obstacleWidth = 0.2f;
-    [SerializeField] float crouchDuration = 0.2f;
     [SerializeField] float bestActionDistance = 0.5f;
-    bool alphaBoy = false;
-    public bool AlphaBoy { set { alphaBoy = value; } }
+
+    float actionDuration;
+    bool rendering = false;
+    public bool Rendering { set { rendering = value; } }
     int infoLentght = 0;
     int actionLentght = 0;
     float actionTime = 0;
@@ -44,6 +45,11 @@ public class DinoBehaviour : MonoBehaviour
             fitness += Time.deltaTime;
             act();
         }
+    }
+
+    public void SetSpeed(float speed)
+    {
+        actionDuration = baseActionDuration * (1/speed);
     }
 
     private void CheckObstacles()
@@ -96,7 +102,7 @@ public class DinoBehaviour : MonoBehaviour
         {
             if (actions.Length > 2 && actions[0] < actions[2])
             {
-                if (alphaBoy)
+                if (rendering)
                     GetComponentInChildren<AnimationBehaviour>().Courch();
                 crouching = true;
                 act += Crouching;
@@ -109,8 +115,8 @@ public class DinoBehaviour : MonoBehaviour
     void Jump()
     {
         actionTime += Time.deltaTime;
-        if(actionTime < jumpDuration)
-            pos.y = (jumpDuration * actionTime - Mathf.Pow(actionTime, 2))*jumpHeight/ Mathf.Pow(jumpDuration, 2);
+        if(actionTime < actionDuration)
+            pos.y = (actionDuration * actionTime - Mathf.Pow(actionTime, 2))*jumpHeight/ Mathf.Pow(actionDuration, 2);
         else
         {
             actionTime = 0;
@@ -124,12 +130,9 @@ public class DinoBehaviour : MonoBehaviour
     private void GiveFitness(int actionID)
     {
         if(actionID == infoInstance.NextObstacleType)
-        {
-            if(Math.Abs(bestActionDistance - infoInstance.NextObstacleDistance) < 0.15f)
-            {
-                fitness += (20 - Math.Abs(bestActionDistance - infoInstance.NextObstacleDistance) * 10);
-            }        
-        }       
+        {            
+            fitness += (20 - Math.Abs(bestActionDistance - infoInstance.NextObstacleDistance) * 10);                
+        } 
     }
 
     public void Reset(NeuronalNetwork neuNet, int[] NeuSize)
@@ -146,11 +149,11 @@ public class DinoBehaviour : MonoBehaviour
     void Crouching()
     {
         actionTime += Time.deltaTime;
-        if (actionTime >= crouchDuration)
+        if (actionTime >= actionDuration)
         {
             actionTime = 0;
             crouching = false;
-            if (alphaBoy)
+            if (rendering)
                 GetComponentInChildren<AnimationBehaviour>().ReturnToIdle();
             act -= Crouching;
             act += Think;
@@ -165,8 +168,6 @@ public class DinoBehaviour : MonoBehaviour
     public void CalculateFitness()
     {
         myNeuronalNetwork.SetFitness(fitness);
-        if (alphaBoy)
-            Debug.Log(fitness);
     }
 
 }

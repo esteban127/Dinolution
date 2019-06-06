@@ -5,12 +5,13 @@ using UnityEngine;
 public class ObstaclesGenerator : MonoBehaviour
 {
 
-    [SerializeField] float spawnrate = 1.0f;
-    [SerializeField] float obstacleSpeed = 0.1f;
-    [SerializeField] float spawnRandomDelayMax = 2.0f;
+    [SerializeField] float baseSpawnrate = 1.0f;
+    float spawnrate;
+    [SerializeField] float baseObstacleSpeed = 0.1f;
+    float obstacleSpeed;
     [SerializeField] float endOfMap = -2.0f;
     float spawnCooldown = 0;
-    [SerializeField] int obstacleVariety;
+    [SerializeField] int obstacleVariety = 1;
     List<GameObject> incomingObstacles;
 
     static private ObstaclesGenerator instance = null;
@@ -33,12 +34,18 @@ public class ObstaclesGenerator : MonoBehaviour
         spawnCooldown = 0;
     }
 
+    public void SetSpeed(float speed)
+    {
+        spawnrate = baseSpawnrate * (1/speed);
+        obstacleSpeed = baseObstacleSpeed *speed;
+    }
+
     void Update()
     {
         if (spawnCooldown <= 0)
         {
             Spawn();
-            spawnCooldown = spawnrate + Random.Range(0, spawnRandomDelayMax);
+            spawnCooldown = spawnrate + Random.Range(0, spawnrate*2);
         }
         spawnCooldown -= Time.deltaTime;
         if (incomingObstacles.Count > 0)

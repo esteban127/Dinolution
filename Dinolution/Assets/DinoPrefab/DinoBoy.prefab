@@ -43,9 +43,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c81fca6279b5be74bac2812c19870093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpDuration: 1
+  baseActionDuration: 1
   jumpHeight: 1.5
   obstacleJumpHeight: 0.2
   obstacleWidth: 0.2
-  crouchDuration: 1
   bestActionDistance: 0.7
