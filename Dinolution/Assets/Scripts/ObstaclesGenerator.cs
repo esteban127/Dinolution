@@ -11,22 +11,9 @@ public class ObstaclesGenerator : MonoBehaviour
     float obstacleSpeed;
     [SerializeField] float endOfMap = -2.0f;
     float spawnCooldown = 0;
-    [SerializeField] int obstacleVariety = 1;
-    List<GameObject> incomingObstacles;
-
-    static private ObstaclesGenerator instance = null;
-    static public ObstaclesGenerator Instance { get { return instance; } }
-
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else if (instance != this)
-            Destroy(gameObject);        
-    }
+    int obstacleVariety = 1;
+    public int ObstacleVariety { get{ return obstacleVariety; } set { obstacleVariety = value; } }
+    List<GameObject> incomingObstacles;    
 
     private void Start()
     {

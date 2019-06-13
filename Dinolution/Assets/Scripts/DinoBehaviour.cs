@@ -135,10 +135,10 @@ public class DinoBehaviour : MonoBehaviour
         } 
     }
 
-    public void Reset(NeuronalNetwork neuNet, int[] NeuSize)
+    public void Reset(NeuronalNetwork neuNet, int infoLeng)
     {
         myNeuronalNetwork = neuNet;
-        infoLentght = NeuSize[0];
+        infoLentght = infoLeng;
         alive = true;        
         actionTime = 0;
         fitness = 0;

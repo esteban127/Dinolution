@@ -4,5 +4,14 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 7abff60765d12d744adc41c07be915c7
+  - enabled: 1
+    path: Assets/Scenes/DinoLand.unity
+    guid: 00b7953ef3f08ce49ac8d10a5231392e
+  - enabled: 1
+    path: Assets/Scenes/Shop.unity
+    guid: 0afb3d57f8c2e694aa710f28cb198709
   m_configObjects: {}

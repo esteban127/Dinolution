@@ -7,7 +7,7 @@ public class AnimationBehaviour : MonoBehaviour
     [SerializeField] Sprite[] spriteStatesTest = null;
     SpriteRenderer render;
 
-    private void Start()
+    private void Awake()
     {
         render = GetComponent<SpriteRenderer>();
     }
