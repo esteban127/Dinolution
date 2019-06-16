@@ -2,14 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DinoLandDirector : MonoBehaviour
 {
     [SerializeField] ConfirmPanel confirm = null;
     [SerializeField] DinoGenerator dinoG = null;
     [SerializeField] ObstaclesGenerator obstaclesG = null;
-    [SerializeField, Range(1, 5)] float speed = 1;
+    float speed = 1;
     [SerializeField] DinoStatsManager stats = null;
+    [SerializeField] Text goldText = null;
     float counter = 0;
 
     SaveLoad SLManager;
@@ -17,15 +19,16 @@ public class DinoLandDirector : MonoBehaviour
     {
         SLManager = SaveLoad.Instance;               
         int[] neuNetwork = CreateNeuronalNetworkSize();
-        dinoG.Initalzie(stats.DinosPerGeneration, neuNetwork);
+        dinoG.Initalzie(10 + (stats.DinosPerGenerationLevel*15), neuNetwork);
         obstaclesG.ObstacleVariety = stats.DinoStage + 1;
-        SetSpeed();
+        goldText.text = stats.Gold.ToString();
+        SetSpeed(1);
     }
 
     private int[] CreateNeuronalNetworkSize()
     {
-        int[] neuNetwork = new int[6 - stats.Smartness];
-        for (int i = 0; i < 4 - stats.Smartness; i++)
+        int[] neuNetwork = new int[6 - stats.SmartnessLevel];
+        for (int i = 0; i < 4 - stats.SmartnessLevel; i++)
         {
             neuNetwork[i + 1] = 5;
         }
@@ -38,6 +41,11 @@ public class DinoLandDirector : MonoBehaviour
             
     }
 
+    public void ActualziateSpeed(float percentage)
+    {
+        SetSpeed(1 + percentage * stats.SpeedLevel * 0.5f);
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -45,10 +53,12 @@ public class DinoLandDirector : MonoBehaviour
             StartCoroutine(WaitForConfirm());
         }
 
-        if (counter > stats.GenerationLifespan || dinoG.CheckExtinction())
+        if (counter > (15 + stats.GenerationLifespanLevel*15)|| dinoG.CheckExtinction())
         {
             obstaclesG.Reset();
             dinoG.NewGeneration();
+            stats.Gold += (int)(counter * stats.GoldMultiplicative);
+            goldText.text = stats.Gold.ToString();
             counter = 0;
         }
         InfoDirector.Instance.GenerationLifetime = counter;
@@ -60,8 +70,9 @@ public class DinoLandDirector : MonoBehaviour
         SLManager.ChangeScene("Shop");
     }
 
-    public void SetSpeed()
+    public void SetSpeed(float newSpeed)
     {
+        speed = newSpeed;
         dinoG.SetSpeed(speed);
         obstaclesG.SetSpeed(speed);
     }

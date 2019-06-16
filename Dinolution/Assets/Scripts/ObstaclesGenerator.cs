@@ -25,6 +25,10 @@ public class ObstaclesGenerator : MonoBehaviour
     {
         spawnrate = baseSpawnrate * (1/speed);
         obstacleSpeed = baseObstacleSpeed *speed;
+        foreach(GameObject obstacle in GetComponent<PoolManager>().getAllActiveObjects())
+        {
+            obstacle.GetComponent<ObstacleBehaviour>().Speed = obstacleSpeed;
+        }
     }
 
     void Update()

@@ -158,7 +158,19 @@ public class PoolManager : MonoBehaviour {
             myArray = new GameObject[0];
             myArray = auxArray;
         }
+        public List<GameObject> getAllActiveObjects()
+        {
+            List<GameObject> activeObjects = new List<GameObject>();
+            for (int i = 0; i < myArray.Length; i++)
+            {
+                if (myArray[i].activeInHierarchy)
+                {
+                    activeObjects.Add(myArray[i]);
+                }
+            }
 
+            return activeObjects;
+        }
     
 
         private void InitializeObject(GameObject objectToInitialize, Vector3 pos, Vector3 rotation, Vector3 scale)
@@ -315,6 +327,20 @@ public class PoolManager : MonoBehaviour {
     public bool PoolIsFull(string poolName)
     {
         return SearchPoolForName(poolName).PoolIsFull;
+    }
+    public List<GameObject> getAllActiveObjects()
+    {
+        List<GameObject> allActiveObjects = new List<GameObject>();
+        List<GameObject> activeObjectsInPool;
+        for (int i = 0; i < poolArray.Count; i++)
+        {
+            activeObjectsInPool = poolArray[i].getAllActiveObjects();
+            for (int j = 0; j < activeObjectsInPool.Count; j++)
+            {
+                allActiveObjects.Add(activeObjectsInPool[j]);
+            }
+        }
+        return allActiveObjects;
     }
     public string ArrayVerify()
     {

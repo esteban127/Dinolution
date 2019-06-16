@@ -30,7 +30,7 @@ public class SaveLoad : MonoBehaviour {
 
     private void CheckSaveFolder()
     {
-        string path = Application.dataPath;
+        string path = Application.persistentDataPath;
         path += ("/Resources/Saves");
         if (!Directory.Exists(path))
         {
