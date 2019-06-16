@@ -783,6 +783,12 @@ MonoBehaviour:
       type: 3}
     deletedPos: {x: 0, y: -6.42, z: 0}
     forceExpand: 0
+  - poolName: Destroy
+    poolSize: 5
+    objectToPool: {fileID: 5639083580882022342, guid: d100e2798e480254abd522b668a1f223,
+      type: 3}
+    deletedPos: {x: 0, y: -6.42, z: 0}
+    forceExpand: 0
 --- !u!114 &944891019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1048,6 +1054,8 @@ MonoBehaviour:
   dinoPrefab: {fileID: 1320038181922945304, guid: eaebf277220a5024bb130a6f585cae41,
     type: 3}
   dinoStyle: {fileID: 8770416367071811595, guid: 16b7300572f217b4eb6253b8e92b3d9a,
+    type: 3}
+  dinoProyectile: {fileID: 5313001316798795977, guid: d1ab399b6efcfd54191834923248666f,
     type: 3}
 --- !u!4 &1076456527
 Transform:

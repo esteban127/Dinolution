@@ -17,7 +17,7 @@ public class Speedometer : MonoBehaviour
         }
         else
         {
-            maxtext.text = (1 + stats.SpeedLevel * 0.5).ToString("F1");
+            maxtext.text = "x" + (1 + stats.SpeedLevel * 0.5).ToString("F1");
         }
         SwipeDetector.OnSwipe += SwipeDetector_OnSwipe;
     }

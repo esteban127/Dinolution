@@ -12,6 +12,7 @@ public class DinoGenerator : MonoBehaviour
     //[SerializeField] float generationLifeSpan = 5;
     [SerializeField] GameObject dinoPrefab = null;
     [SerializeField] GameObject dinoStyle = null;
+    [SerializeField] GameObject dinoProyectile = null;
     GameObject[] poblation;
     int infoLenght = 1;
     
@@ -41,11 +42,12 @@ public class DinoGenerator : MonoBehaviour
         style.transform.SetParent(poblation[0].transform);
         
     }*/
-    public void Initalzie(int poblationNum, int[] neuronalNetworkSize)
+    public void Initalzie(int poblationNum, int[] neuronalNetworkSize, int dinoStage)
     {
         infoLenght = neuronalNetworkSize[0];
         poblation = new GameObject[poblationNum];
         NeuronalList = new List<NeuronalNetwork>();
+        InfoDirector.Instance.resetDinos(poblationNum);
         for (int i = 0; i < poblationNum; i++)
         {
             GameObject myDino = Instantiate(dinoPrefab);
@@ -54,9 +56,15 @@ public class DinoGenerator : MonoBehaviour
             myDino.GetComponent<DinoBehaviour>().Reset(myIA, infoLenght);
             myDino.transform.position = transform.position;
             GameObject style = Instantiate(dinoStyle);
-            myDino.GetComponent<DinoBehaviour>().Rendering = true; //render all test
+            myDino.GetComponent<DinoBehaviour>().Rendering = true; //render all
+            myDino.GetComponent<DinoBehaviour>().DinoID = i;
+            style.GetComponent<AnimationBehaviour>().DinoStage = dinoStage;
             style.transform.SetParent(myDino.transform);
-
+            if (dinoStage == 2)
+            {
+                GameObject proyectile = Instantiate(dinoProyectile);
+                proyectile.transform.SetParent(myDino.transform);
+            }
             poblation[i] = myDino;
             myDino.transform.SetParent(transform);
         }

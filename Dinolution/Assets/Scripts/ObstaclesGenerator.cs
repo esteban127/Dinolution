@@ -5,14 +5,16 @@ using UnityEngine;
 public class ObstaclesGenerator : MonoBehaviour
 {
 
-    [SerializeField] float baseSpawnrate = 1.0f;
-    float spawnrate;
+    [SerializeField] float spawnrate = 1.0f;    
     [SerializeField] float baseObstacleSpeed = 0.1f;
+    float speed = 1;
     float obstacleSpeed;
     [SerializeField] float endOfMap = -2.0f;
     float spawnCooldown = 0;
+    int dinoPopulation = 10;
     int obstacleVariety = 1;
     public int ObstacleVariety { get{ return obstacleVariety; } set { obstacleVariety = value; } }
+    public int DinoPopulation { get { return dinoPopulation; } set { dinoPopulation = value; } }
     List<GameObject> incomingObstacles;    
 
     private void Start()
@@ -21,9 +23,9 @@ public class ObstaclesGenerator : MonoBehaviour
         spawnCooldown = 0;
     }
 
-    public void SetSpeed(float speed)
+    public void SetSpeed(float newSpeed)
     {
-        spawnrate = baseSpawnrate * (1/speed);
+        speed = newSpeed;
         obstacleSpeed = baseObstacleSpeed *speed;
         foreach(GameObject obstacle in GetComponent<PoolManager>().getAllActiveObjects())
         {
@@ -38,26 +40,27 @@ public class ObstaclesGenerator : MonoBehaviour
             Spawn();
             spawnCooldown = spawnrate + Random.Range(0, spawnrate*2);
         }
-        spawnCooldown -= Time.deltaTime;
+        spawnCooldown -= Time.deltaTime*speed;
         if (incomingObstacles.Count > 0)
         {
             if (incomingObstacles[0].transform.position.x > 0)
             {
-                InfoDirector.Instance.NextObstacleDistance = incomingObstacles[0].transform.position.x;
+                if(InfoDirector.Instance.NextObstacle!= incomingObstacles[0])
+                    InfoDirector.Instance.NextObstacle = incomingObstacles[0];
             }
             else
             {
                 if (incomingObstacles.Count > 1)
                 {
-                    InfoDirector.Instance.NextObstacleType = incomingObstacles[1].GetComponent<ObstacleBehaviour>().Type;
+                    InfoDirector.Instance.NextObstacle = incomingObstacles[1];
                 }
-                InfoDirector.Instance.NextObstacleDistance = 2;                
+                InfoDirector.Instance.NextObstacle = null;                
                 incomingObstacles.RemoveAt(0);
             }
         }
         else
         {
-            InfoDirector.Instance.NextObstacleDistance = 2;
+            InfoDirector.Instance.NextObstacle = null;
         }
             
     }
@@ -77,10 +80,13 @@ public class ObstaclesGenerator : MonoBehaviour
         newObstacle.GetComponent<ObstacleBehaviour>().EndOfMap = endOfMap;
         newObstacle.GetComponent<ObstacleBehaviour>().Pos = transform.position;
         newObstacle.GetComponent<ObstacleBehaviour>().Type = typeToSpawn; 
+        if(typeToSpawn == 2) //destructible object
+        {
+            newObstacle.GetComponent<DestructibleObstacleBehaviour>().ResetStatus(dinoPopulation);
+        }
         if (incomingObstacles.Count == 0)
         {
-            InfoDirector.Instance.NextObstacleDistance = transform.position.x;
-            InfoDirector.Instance.NextObstacleType = typeToSpawn;
+            InfoDirector.Instance.NextObstacle = newObstacle;
         }
         incomingObstacles.Add(newObstacle);
 

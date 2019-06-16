@@ -13,7 +13,6 @@ public class ShopButtonManager : MonoBehaviour
     {
         if (level < prices.Length)
         {
-            Debug.Log(level);
             actualLevel = level;
             GetComponentInChildren<Text>().text = prices[level].ToString();
             GetComponent<Button>().interactable = prices[level] <= totalgold;

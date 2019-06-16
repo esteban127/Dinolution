@@ -19,8 +19,9 @@ public class DinoLandDirector : MonoBehaviour
     {
         SLManager = SaveLoad.Instance;               
         int[] neuNetwork = CreateNeuronalNetworkSize();
-        dinoG.Initalzie(10 + (stats.DinosPerGenerationLevel*15), neuNetwork);
+        dinoG.Initalzie(10 + (stats.DinosPerGenerationLevel*15), neuNetwork,stats.DinoStage);
         obstaclesG.ObstacleVariety = stats.DinoStage + 1;
+        obstaclesG.DinoPopulation = (10 + (stats.DinosPerGenerationLevel * 15));
         goldText.text = stats.Gold.ToString();
         SetSpeed(1);
     }
@@ -57,11 +58,10 @@ public class DinoLandDirector : MonoBehaviour
         {
             obstaclesG.Reset();
             dinoG.NewGeneration();
-            stats.Gold += (int)(counter * stats.GoldMultiplicative);
+            stats.Gold += (int)((counter + (counter*counter)/100) * stats.GoldMultiplicative);
             goldText.text = stats.Gold.ToString();
             counter = 0;
         }
-        InfoDirector.Instance.GenerationLifetime = counter;
         counter += (Time.deltaTime * speed);
     }
 

@@ -6,7 +6,8 @@ public class AnimationBehaviour : MonoBehaviour
 {
     [SerializeField] Sprite[] spriteStatesTest = null;
     SpriteRenderer render;
-
+    int dinoStage = 0;
+    public int DinoStage { set { dinoStage = value; } }
     private void Awake()
     {
         render = GetComponent<SpriteRenderer>();
@@ -14,6 +15,10 @@ public class AnimationBehaviour : MonoBehaviour
     public void Courch()
     {
         render.sprite = spriteStatesTest[1];
+    }
+    public void Shoot()
+    {
+        render.sprite = spriteStatesTest[2];
     }
     public void ReturnToIdle()
     {
