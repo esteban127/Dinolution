@@ -10,6 +10,7 @@ public class DinoBehaviour : MonoBehaviour
     [SerializeField] float obstacleJumpHeight = 0.2f;
     [SerializeField] float obstacleWidth = 0.2f;
     [SerializeField] float bestActionDistance = 0.5f;
+    [SerializeField] float outOfBounds = -2.5f;
 
     float actionDuration;
     int dinoID = 0;
@@ -32,12 +33,15 @@ public class DinoBehaviour : MonoBehaviour
     float[] actions;
     InfoDirector infoInstance;
 
+    private void Awake()
+    {
+        infoInstance = InfoDirector.Instance;
+    }
     private void Start()
     {
         act += Think;
         information = new float[infoLentght];
         actions = new float[actionLentght];
-        infoInstance = InfoDirector.Instance;
     }    
 
     void Update()
@@ -47,8 +51,8 @@ public class DinoBehaviour : MonoBehaviour
         if (alive)
         {
             fitness += Time.deltaTime;
-            act();
         }
+        act?.Invoke();
     }
 
     public void SetSpeed(float newSpeed)
@@ -59,7 +63,6 @@ public class DinoBehaviour : MonoBehaviour
 
     private void CheckObstacles()
     {
-        
         if (infoInstance.NextObstacleDistance() <= obstacleWidth)
         {
             switch (infoInstance.NextObstacleType())
@@ -186,6 +189,39 @@ public class DinoBehaviour : MonoBehaviour
         }
     }
 
+    void Die()
+    {
+        infoInstance.KillDino(dinoID);
+        alive = false;
+        CleanDelegate();
+        act += Dying;
+        pos.y = 0;
+        if(rendering)
+            GetComponentInChildren<AnimationBehaviour>().Die();
+        transform.position = pos;
+    }
+    void Dying()
+    {
+        pos.x -= Time.deltaTime * speed;
+        if (pos.x<=outOfBounds)
+        {
+            if (rendering)
+                GetComponentInChildren<AnimationBehaviour>().ReturnToIdle();
+            act -= Dying;
+            act += Think;
+            gameObject.SetActive(false);
+        }
+        transform.position = pos;
+    }
+    private void CleanDelegate()
+    {
+        Delegate[] functions = act.GetInvocationList();
+        for (int i = 0; i < functions.Length; i++)
+        {
+            act -= (ActionDelegate)functions[i];
+        }
+    }
+
     private void GiveFitness(int actionID)
     {        
         if (actionID == infoInstance.NextObstacleType())
@@ -200,19 +236,31 @@ public class DinoBehaviour : MonoBehaviour
         infoLentght = infoLeng;
         alive = true;        
         actionTime = 0;
+        infoInstance.ReviveDino(dinoID);
         fitness = 0;
         crouching = false;
+        pos = new Vector3(0, 0, 0);
+        transform.position = pos;
+        if (act!= null)
+        {
+            CleanDelegate();
+            act += Think;
+        }
+        if (rendering)
+            GetComponentInChildren<AnimationBehaviour>().ReturnToIdle();
         gameObject.SetActive(true);
-    }   
-    void Die()
-    {
-        infoInstance.KillDino(dinoID);
-        alive = false;        
-        gameObject.SetActive(false);
-    }
+    }  
+
     public void CalculateFitness()
     {
         myNeuronalNetwork.SetFitness(fitness);
     }
-
+    public NeuronalNetwork.SavedNeuronalNetwork SaveNeuronalNetwork()
+    {
+        return myNeuronalNetwork.SaveNeuronalNetwork();
+    }
+    public void LoadNeuronalNetwork(int[] initilLayers, NeuronalNetwork.SavedNeuronalNetwork save)
+    {
+        myNeuronalNetwork.LoadNeuronalnetwork(initilLayers, save);
+    }
 }

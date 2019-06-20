@@ -11,7 +11,7 @@ public class MainMenuEvents : MonoBehaviour
     private void Start()
     {
         SLManager = SaveLoad.Instance;
-        if (SLManager.CheckSaveData())
+        if (SLManager.CheckSaveData("Data.json"))
         {
             continueButton.interactable = true;
         }
@@ -27,7 +27,7 @@ public class MainMenuEvents : MonoBehaviour
 
     public void NewGame()
     {
-        if (SLManager.CheckSaveData())
+        if (SLManager.CheckSaveData("Data.json"))
         {
             StartCoroutine(WaitForConfirm());
         }

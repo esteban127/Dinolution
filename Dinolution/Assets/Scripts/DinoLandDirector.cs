@@ -6,24 +6,39 @@ using UnityEngine.UI;
 
 public class DinoLandDirector : MonoBehaviour
 {
+    [SerializeField] float deathDelay = 1.5f;
     [SerializeField] ConfirmPanel confirm = null;
     [SerializeField] DinoGenerator dinoG = null;
     [SerializeField] ObstaclesGenerator obstaclesG = null;
     float speed = 1;
     [SerializeField] DinoStatsManager stats = null;
     [SerializeField] Text goldText = null;
+    [SerializeField] Text scoreText = null;
+    [SerializeField] Text populationText = null;
+    [SerializeField] Slider lifespan = null;
     float counter = 0;
+    float diedCounter = 0;
 
     SaveLoad SLManager;
     private void Start()
     {
         SLManager = SaveLoad.Instance;               
         int[] neuNetwork = CreateNeuronalNetworkSize();
-        dinoG.Initalzie(10 + (stats.DinosPerGenerationLevel*15), neuNetwork,stats.DinoStage);
+        dinoG.Initalzie(10 + (stats.DinosPerGenerationLevel*10), neuNetwork,stats.DinoStage);
         obstaclesG.ObstacleVariety = stats.DinoStage + 1;
-        obstaclesG.DinoPopulation = (10 + (stats.DinosPerGenerationLevel * 15));
+        obstaclesG.DinoPopulation = (10 + (stats.DinosPerGenerationLevel * 10));
         goldText.text = stats.Gold.ToString();
         SetSpeed(1);
+    }
+    private void Awake()
+    {
+        SaveLoad.BeforeClosing += SaveGeneration;
+    }
+
+    private void SaveGeneration()
+    {
+        int[] neuNetwork = CreateNeuronalNetworkSize();
+        dinoG.Save((10 + (stats.DinosPerGenerationLevel * 10)), neuNetwork);
     }
 
     private int[] CreateNeuronalNetworkSize()
@@ -38,9 +53,9 @@ public class DinoLandDirector : MonoBehaviour
             neuNetwork[0] = stats.DinoStage + 1;
         }// agregar en fase 4 para final
         neuNetwork[neuNetwork.Length - 1] = stats.DinoStage + 2;
-        return neuNetwork;
-            
+        return neuNetwork;            
     }
+
 
     public void ActualziateSpeed(float percentage)
     {
@@ -54,15 +69,31 @@ public class DinoLandDirector : MonoBehaviour
             StartCoroutine(WaitForConfirm());
         }
 
-        if (counter > (15 + stats.GenerationLifespanLevel*15)|| dinoG.CheckExtinction())
+        if (counter > (15 + stats.GenerationLifespanLevel*15)||diedCounter>deathDelay)
         {
             obstaclesG.Reset();
             dinoG.NewGeneration();
             stats.Gold += (int)((counter + (counter*counter)/100) * stats.GoldMultiplicative);
             goldText.text = stats.Gold.ToString();
             counter = 0;
+            diedCounter = 0;
         }
-        counter += (Time.deltaTime * speed);
+        ActalizateUI();
+        if (dinoG.CheckExtinction())
+        {
+            diedCounter+= (Time.deltaTime * speed);
+        }
+        else
+        {
+            counter += (Time.deltaTime * speed);
+        }        
+    }
+
+    private void ActalizateUI()
+    {
+        scoreText.text = "Score: " + (int)((counter+ (counter * counter) / 100));
+        populationText.text = "Population: " + InfoDirector.Instance.AmountOfDinosAlive();
+        lifespan.value = (((15 + stats.GenerationLifespanLevel * 15)- counter) / (15 + stats.GenerationLifespanLevel * 15));
     }
 
     public void ReturnToShop()

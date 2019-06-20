@@ -30,12 +30,21 @@ public class NeuronalNetwork : IComparable<NeuronalNetwork> {
 
     public NeuronalNetwork(NeuronalNetwork parent)
     {
-
         layers = parent.Layers;
         bias = copyArray(parent.Bias); 
         InicializarNeuronas(layers);
         CopiarPesos(parent.Pesos);
-
+    }
+    public void LoadNeuronalnetwork(int[] initilLayers , SavedNeuronalNetwork save)
+    {
+        bias = copyArray(save.savedBias);
+        InicializarNeuronas(layers);
+        CopiarPesos(save.LoadPesos(initilLayers));
+    }
+    public SavedNeuronalNetwork SaveNeuronalNetwork()
+    {
+        SavedNeuronalNetwork save = new SavedNeuronalNetwork(bias, pesos);
+        return save;
     }
 
     private void InicializarBias(int[] layers)
@@ -242,5 +251,61 @@ public class NeuronalNetwork : IComparable<NeuronalNetwork> {
             return 1;
 
         return -1;
+    }
+    [System.Serializable]
+    public class SavedNeuronalNetwork
+    {
+        public float[] savedBias;
+        public List<float> savedPesos;
+        public SavedNeuronalNetwork(float[] bias,float[][][]pesos)
+        {
+            savedBias = new float[bias.Length];
+            for (int i = 0; i < savedBias.Length; i++)
+            {
+                savedBias[i] = bias[i];
+            }            
+            SavePesos(pesos);
+
+        }
+        private void SavePesos(float[][][] parentPeso)
+        {
+            savedPesos = new List<float>();
+            for (int i = 0; i < parentPeso.Length; i++)
+            {
+                for (int j = 0; j < parentPeso[i].Length; j++)
+                {
+                    for (int k = 0; k < parentPeso[i][j].Length; k++)
+                    {
+                        savedPesos.Add(parentPeso[i][j][k]);
+                    }
+                }
+            }
+        }
+        public float[][][] LoadPesos(int[] neuronalLayer)
+        {
+            int counter = 0;
+            List<float> provitionalList;
+            List<float[]> provitionalArrayList;
+            float[][][] pesos = new float[neuronalLayer.Length - 1][][];
+            float value;
+            for (int i = 0; i < neuronalLayer.Length - 1; i++)
+            {
+                provitionalArrayList = new List<float[]>();
+                for (int j = 0; j < neuronalLayer[i + 1]; j++)
+                {
+                    provitionalList = new List<float>();
+                    for (int k = 0; k < neuronalLayer[i]; k++)
+                    {
+                        value = savedPesos[counter];
+                        counter++;
+                        provitionalList.Add(value);
+                    }
+                    provitionalArrayList.Add(provitionalList.ToArray());
+                }
+                pesos[i] = provitionalArrayList.ToArray();
+            }
+            return pesos;
+        }
+        
     }
 }

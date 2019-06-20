@@ -55,7 +55,7 @@ public class DinoStatsManager : MonoBehaviour
     }
     void Load()
     {     
-        if (SaveLoad.Instance.CheckSaveData())
+        if (SaveLoad.Instance.CheckSaveData("Data.json"))
         {
             string path = SaveLoad.Instance.SaveDirectory + "Data.json";
             DinoData saveData = JsonUtility.FromJson<DinoData>(File.ReadAllText(path));

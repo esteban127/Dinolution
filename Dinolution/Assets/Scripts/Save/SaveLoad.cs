@@ -38,9 +38,9 @@ public class SaveLoad : MonoBehaviour {
         }
         currentDirectory = path + "/";
     }
-    public bool CheckSaveData()
+    public bool CheckSaveData(string fileName)
     {
-        string path = (currentDirectory + "Data.json");
+        string path = (currentDirectory + fileName);
         if (File.Exists(path))
         {
             return true;
@@ -50,6 +50,8 @@ public class SaveLoad : MonoBehaviour {
     public void DeleteSave()
     {
         string path = (currentDirectory + "Data.json");
+        File.Delete(path);
+        path = (currentDirectory + "NeuronalNetwork.json");
         File.Delete(path);
     }
     public void ChangeScene(string sceneName)

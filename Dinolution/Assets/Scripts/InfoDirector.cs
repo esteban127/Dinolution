@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class InfoDirector
@@ -25,13 +26,21 @@ public class InfoDirector
     {
         dinosAlive[dinoID] = false;
     }
-    public void resetDinos(int dinoPopulation)
+    public int AmountOfDinosAlive()
+    {
+        return dinosAlive.Count(d => d);
+    }
+    public void SetDinos(int dinoPopulation)
     {
         dinosAlive = new bool[dinoPopulation];
         for (int i = 0; i < dinosAlive.Length; i++)
         {
             dinosAlive[i] = true;
         }
+    }
+    public void ReviveDino(int dinoID)
+    {
+        dinosAlive[dinoID] = true;
     }
     public float NextObstacleDistance()
     {

@@ -16,6 +16,10 @@ public class AnimationBehaviour : MonoBehaviour
     {
         render.sprite = spriteStatesTest[1];
     }
+    public void Die()
+    {
+        render.sprite = spriteStatesTest[3];
+    }
     public void Shoot()
     {
         render.sprite = spriteStatesTest[2];
